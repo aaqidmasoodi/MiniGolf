@@ -1,6 +1,7 @@
 import pygame
 import sys
 import time
+import button
 from MENU_CONFIG import *
 from levels import LEVELS
 pygame.init()
@@ -45,10 +46,7 @@ GOLF_RESPAWN = pygame.mixer.Sound("./sounds/golf_respawn.wav")
 
 #create button instances
 RESUME_BTN      = button.Button(304, 125, resume_img.convert_alpha(), 1)
-OPTIONS_BTN     = button.Button(297, 250, options_img.convert_alpha(), 1)
 QUIT_BTN        = button.Button(336, 375, quit_img.convert_alpha(), 1)
-BACK_BTN        = button.Button(332, 450, back_img.convert_alpha(), 1)
-NEXT_BTN        = button.Button(246, 325, next_img.convert_alpha(), 1)
 
 
 font_menu = pygame.font.SysFont("arialblack", 40)
@@ -72,15 +70,8 @@ while run:
       #draw pause screen buttons
       if RESUME_BTN.draw(screen):
         game_paused = False
-      if OPTIONS_BTN.draw(screen):
-        menu_state = "options"
       if QUIT_BTN.draw(screen):
         run = False
-    #check if the options menu is open
-    if menu_state == "options":
-
-      if BACK_BTN.draw(screen):
-        menu_state = "main"
   else:
 
     pygame.time.delay(10)
@@ -135,6 +126,7 @@ while run:
         # Behavior:
         if wall.collidepoint(x,y-BALL_THICKNESS):
             yspeed = abs(yspeed)
+
 
 
     
@@ -195,7 +187,7 @@ while run:
   #event handler
   for event in pygame.event.get():
     if event.type == pygame.KEYDOWN:
-      if event.key == pygame.K_SPACE:
+      if event.key == pygame.K_ESCAPE:
         game_paused = True
 
     if event.type == pygame.MOUSEBUTTONUP and not BALL_IN_HOLE and not game_paused:
