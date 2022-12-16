@@ -13,6 +13,7 @@ clock = pygame.time.Clock()
 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_NO)
 game_paused = False
 menu_state = "main"
+resume_iteration = False
 screen = pygame.display.set_mode((800,600))
 pygame.display.set_caption("AliciaGolf")
 HOLER = 25
@@ -45,8 +46,8 @@ GOLF_SCORED = pygame.mixer.Sound("./sounds/golf_scored.wav")
 GOLF_RESPAWN = pygame.mixer.Sound("./sounds/golf_respawn.wav")
 
 #create button instances
-RESUME_BTN      = button.Button(304, 125, resume_img.convert_alpha(), 1)
-QUIT_BTN        = button.Button(336, 375, quit_img.convert_alpha(), 1)
+RESUME_BTN = button.Button(304, 200, resume_img.convert_alpha(), 1)
+QUIT_BTN = button.Button(336, 300, quit_img.convert_alpha(), 1)
 
 
 font_menu = pygame.font.SysFont("arialblack", 40)
@@ -70,6 +71,7 @@ while run:
       #draw pause screen buttons
       if RESUME_BTN.draw(screen):
         game_paused = False
+        resume_iteration = True
       if QUIT_BTN.draw(screen):
         run = False
   else:
@@ -188,14 +190,16 @@ while run:
   for event in pygame.event.get():
     if event.type == pygame.KEYDOWN:
       if event.key == pygame.K_ESCAPE:
-        game_paused = True
+        game_paused = False if game_paused else True
 
-    if event.type == pygame.MOUSEBUTTONUP and not BALL_IN_HOLE and not game_paused:
+    if event.type == pygame.MOUSEBUTTONUP and not BALL_IN_HOLE and not resume_iteration:
       if abs(yspeed) < 0.1 and abs(xspeed) < 0.1:
         xspeed = int((pos[0]-x)/modulator)
         yspeed = int((pos[1]-y)/modulator)
         strokes += 1
         GOLF_HIT.play()
+    if event.type == pygame.MOUSEBUTTONUP and resume_iteration:
+      resume_iteration = False
 
     if event.type == pygame.QUIT:
       run = False
